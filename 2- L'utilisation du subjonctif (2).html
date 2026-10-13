@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Subjonctif (en bref)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Libre+Franklin:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#FBF8F1;
+    --paper-line:#C9DCEA;
+    --margin-red:#D65B5B;
+    --ink:#1F3350;
+    --ink-soft:#4B5D78;
+    --correct:#2F8F6F;
+    --wrong:#C0454A;
+    --warn-bg: color-mix(in srgb, #D65B5B 10%, transparent);
+    --note-bg: color-mix(in srgb, #C9DCEA 35%, transparent);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12161d; --paper-line:#1f2a3a; --margin-red:#c96868;
+      --ink:#eef1f6; --ink-soft:#aab6c8; --correct:#5fbf9a; --wrong:#e07a7e;
+      --warn-bg: color-mix(in srgb, #c96868 14%, transparent);
+      --note-bg: color-mix(in srgb, #1f2a3a 70%, transparent);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12161d; --paper-line:#1f2a3a; --margin-red:#c96868;
+    --ink:#eef1f6; --ink-soft:#aab6c8; --correct:#5fbf9a; --wrong:#e07a7e;
+    --warn-bg: color-mix(in srgb, #c96868 14%, transparent);
+    --note-bg: color-mix(in srgb, #1f2a3a 70%, transparent);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background: var(--paper); color: var(--ink);
+    font-family:'Libre Franklin', system-ui, sans-serif;
+    font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    max-width:780px; margin:0 auto; padding: 56px 32px 90px 64px; position:relative;
+  }
+  .margin-line{ position:absolute; left:38px; top:0; bottom:0; width:1.5px; background: var(--margin-red); opacity:.55; }
+
+  header{ margin-bottom: 30px; }
+  .eyebrow{
+    font-family:'Caveat', cursive; font-size:1.5rem; color: var(--margin-red);
+    transform: rotate(-2deg); display:inline-block; margin:0 0 2px 2px;
+  }
+  h1{ font-family:'Fraunces', serif; font-weight:600; font-size: 2.5rem; margin: 0 0 6px 0; letter-spacing:-0.01em; }
+  .sub{ color: var(--ink-soft); font-size:1.05rem; max-width: 58ch; }
+
+  section{ margin: 40px 0; }
+  h2{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.4rem; margin: 0 0 12px 0;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  h2 .num{ color: var(--margin-red); font-family:'Caveat', cursive; font-size:1.6rem; }
+  h3.sec{ font-family:'Fraunces', serif; font-weight:600; font-style:italic; font-size:1.08rem; margin: 22px 0 8px 0; }
+
+  p{ margin: 0 0 12px 0; }
+  .example{
+    margin: 10px 0 14px 0; padding: 10px 16px; border-left: 3px solid var(--paper-line);
+    font-size:.96rem; color: var(--ink-soft);
+  }
+  .example strong{ color: var(--ink); }
+  .example .en{ font-style:italic; font-size:.88rem; opacity:.85; }
+
+  .note-box{
+    background: var(--note-bg); border-radius:4px; padding: 14px 18px; font-size:.92rem;
+    color: var(--ink-soft); margin: 14px 0;
+  }
+  .note-box strong{ color: var(--ink); }
+
+  .callout{
+    background: var(--warn-bg); border-left: 3px solid var(--margin-red); border-radius:2px;
+    padding: 16px 20px; margin: 16px 0;
+  }
+  .callout .tag{
+    font-family:'Caveat', cursive; color: var(--margin-red); font-size:1.3rem; display:block; margin-bottom:4px;
+  }
+
+  ul.rules{ margin: 8px 0 8px 0; padding-left: 20px; }
+  ul.rules li{ margin-bottom: 8px; }
+  ul.rules li strong{ color: var(--ink); }
+
+  .cat-block{ margin: 14px 0; }
+  .cat-block .label{ font-weight:600; margin-bottom:4px; }
+  .cat-block ul{ margin: 4px 0 0 0; padding-left: 20px; }
+  .cat-block li{ margin-bottom:4px; color: var(--ink-soft); font-size:.95rem; }
+
+  /* Exercises */
+  .exercise{ margin: 18px 0; padding-bottom: 14px; border-bottom: 1px dotted var(--paper-line); }
+  .exercise:last-child{ border-bottom:none; }
+  .exercise .n{ font-weight:700; color: var(--margin-red); margin-right:6px; }
+  .exercise .sentence{ font-size:1rem; }
+
+  .options{ display:flex; gap: 10px; flex-wrap:wrap; margin-top:8px; }
+  .opt-label{
+    border:1.5px solid var(--paper-line); padding: 6px 14px; border-radius: 16px;
+    font-size:.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .opt-label input{ accent-color: var(--ink); }
+  .opt-label.correct{ border-color: var(--correct); background: color-mix(in srgb, var(--correct) 12%, transparent); color: var(--correct); }
+  .opt-label.wrong{ border-color: var(--wrong); background: color-mix(in srgb, var(--wrong) 12%, transparent); color: var(--wrong); }
+
+  select.classify{
+    font-family:'Libre Franklin', sans-serif; font-size:.9rem; padding: 5px 8px; border-radius:4px;
+    border: 1.5px solid var(--ink-soft); background: var(--paper); color: var(--ink); margin-left:8px;
+  }
+  select.classify.correct{ border-color: var(--correct); color: var(--correct); }
+  select.classify.wrong{ border-color: var(--wrong); color: var(--wrong); }
+
+  .blank-wrap{ display:inline-flex; flex-direction:column; vertical-align:bottom; margin: 0 2px; }
+  input.blank{
+    font-family:'Libre Franklin', sans-serif; font-size:1rem; font-weight:600; color: var(--ink);
+    background: transparent; border:none; border-bottom: 2px solid var(--ink-soft);
+    padding: 1px 4px; width: 120px; text-align:center; outline:none;
+  }
+  input.blank:focus{ border-bottom-color: var(--ink); }
+  input.blank.correct{ border-bottom-color: var(--correct); color: var(--correct); }
+  input.blank.wrong{ border-bottom-color: var(--wrong); color: var(--wrong); }
+
+  .correction{
+    font-family:'Caveat', cursive; color: var(--wrong); font-size:1.1rem; margin-left: 6px;
+    opacity:0; transition: opacity .25s ease;
+  }
+  .correction.show{ opacity:1; }
+  .hint{ color: var(--ink-soft); font-style:italic; font-size:.85rem; margin-top:2px; }
+
+  .grade-badge{
+    position:absolute; top:34px; right:22px; width:84px; height:84px;
+    border:2.5px solid var(--margin-red); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; transform: rotate(6deg);
+    font-family:'Caveat', cursive; font-weight:700; font-size:1.6rem; color: var(--margin-red);
+    opacity:0; transition: opacity .35s ease; text-align:center; line-height:1.05;
+    background: color-mix(in srgb, var(--paper) 85%, transparent);
+  }
+  .grade-badge.show{ opacity:1; }
+
+  .controls{ display:flex; gap:12px; align-items:center; margin-top: 26px; flex-wrap:wrap; }
+  button{
+    font-family:'Libre Franklin', sans-serif; font-weight:600; font-size:.92rem; padding: 11px 22px;
+    border-radius: 4px; cursor:pointer; border: 1.5px solid var(--ink); background: var(--ink);
+    color: var(--paper); transition: transform .12s ease, opacity .12s ease;
+  }
+  button:hover{ opacity:.88; }
+  button:active{ transform: scale(.97); }
+  button.ghost{ background: transparent; color: var(--ink); }
+  .score-line{ font-size:.92rem; color: var(--ink-soft); }
+
+  footer{ margin-top: 50px; padding-top: 18px; border-top: 1px solid var(--paper-line); color: var(--ink-soft); font-size:.85rem; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+  @media (max-width: 560px){
+    .page{ padding: 40px 20px 70px 48px; }
+    h1{ font-size:2rem; }
+    .grade-badge{ width:64px; height:64px; font-size:1.15rem; top:20px; right:12px; }
+    input.blank{ width: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="margin-line"></div>
+  <div class="grade-badge" id="gradeBadge">—</div>
+
+  <header>
+    <span class="eyebrow">fiche de cours</span>
+    <h1>Le Subjonctif (en bref)</h1>
+    <p class="sub">Quand — et pourquoi — utilise-t-on le subjonctif ? Niveau B1 / B2, utile pour la production écrite au Bac.</p>
+  </header>
+
+  <section>
+    <h2><span class="num">I.</span> Introduction générale</h2>
+    <p>Le subjonctif est le mode des actions présentées comme <strong>possibles</strong>, alors que l'indicatif est le mode des actions présentées comme <strong>certaines</strong>.</p>
+
+    <div class="example">
+      <strong>Je doute que le directeur vous <u>voie</u> aujourd'hui.</strong>
+      <span class="en">(I doubt that the Director will see you today.)</span><br>
+      Le rendez-vous est incertain : le verbe « voie » est au subjonctif.
+    </div>
+    <div class="example">
+      <strong>Il est certain que le directeur vous <u>verra</u> aujourd'hui.</strong><br>
+      Le rendez-vous est certain : le verbe « verra » est à l'indicatif.
+    </div>
+
+    <div class="callout">
+      <span class="tag">❗ remarque</span>
+      Le subjonctif est parfois employé pour un fait présenté comme certain. Mais la notion de possibilité reste toujours présente, bien que moins explicite.
+      <div class="example" style="margin-top:10px;">
+        <strong>Je regrette que les araignées vous <u>fassent</u> peur.</strong>
+        <span class="en">(I regret that spiders scare you)</span>
+      </div>
+      Ce n'est pas explicite, mais le subjonctif exprime ici le fait que la personne qui parle imagine une autre possibilité : que vous n'ayez pas peur des araignées. Cette nuance est trop subtile pour le niveau B1/B2 — c'est pourquoi nous allons apprendre le subjonctif à travers des <strong>structures</strong> plutôt qu'à travers ces significations subtiles.
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">II.</span> Quand utiliser le subjonctif ?</h2>
+    <p>Le subjonctif est un mode qui exprime le doute, le souhait, la nécessité, la possibilité, la volonté, le sentiment ou le jugement. Il s'emploie principalement (mais pas seulement) dans les subordonnées introduites par « que » après certains verbes ou expressions.</p>
+    <div class="note-box">Il y a 4 temps du subjonctif : le <strong>présent</strong> et l'<strong>imparfait</strong>, qui sont courants, et le <strong>passé</strong> et le <strong>plus-que-parfait</strong>, qui sont des temps littéraires et peu courants. Dans cette leçon, on étudie seulement le <strong>subjonctif présent</strong> utilisé pour donner une opinion — utile pour la production écrite au Bac/Matric.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">III.</span> Les structures à mémoriser</h2>
+    <div class="callout">
+      <span class="tag">⚠ mémorisez ceci</span>
+      <ul class="rules">
+        <li>Après un verbe exprimant la <strong>volonté</strong> + que : <em>vouloir que, souhaiter que, exiger que</em>.</li>
+        <li>Après un verbe exprimant un <strong>sentiment</strong> + que : <em>être content que, être triste que</em>.</li>
+        <li>Après un verbe exprimant le <strong>doute ou l'incertitude</strong> + que : <em>douter que, il est possible que</em>.</li>
+        <li>Dans certaines structures subordonnées <strong>circonstancielles</strong> avec que : <em>pour que, afin que, avant que, bien que</em>.</li>
+        <li>Après des structures comme le <strong>superlatif</strong> et certaines structures négatives + que : <em>le seul que, le meilleur que</em>.</li>
+      </ul>
+    </div>
+
+    <h3 class="sec">Les verbes d'opinion et le subjonctif</h3>
+    <p>Les verbes d'opinion (<em>penser, croire, trouver, être sûr, être certain</em>) sont suivis de l'<strong>indicatif</strong> à la forme affirmative : <em>Je pense qu'il est ici.</em></p>
+    <p>Mais on emploie le <strong>subjonctif</strong> :</p>
+    <div class="example">à la forme <strong>négative</strong> : Je pense qu'il est là. → <strong>Je ne pense pas qu'il soit là.</strong></div>
+    <div class="example">après une <strong>interrogation avec inversion</strong> du sujet : Tu penses qu'il est là ? → <strong>Penses-tu qu'il soit là ?</strong></div>
+    <div class="note-box">⚠ Le verbe <strong>espérer</strong> n'est pas suivi du subjonctif : <em>J'espère que la mer est calme.</em></div>
+
+    <h3 class="sec">Il est + adjectif + que + subjonctif</h3>
+    <p>On utilise le subjonctif après des expressions impersonnelles formées avec « il est + adjectif + que » lorsque celles-ci expriment :</p>
+
+    <div class="cat-block">
+      <div class="label">Une nécessité ou une obligation</div>
+      <ul><li>Il est essentiel que tu sois à l'heure.</li><li>Il est nécessaire qu'elle parte maintenant.</li></ul>
+    </div>
+    <div class="cat-block">
+      <div class="label">Un jugement ou une appréciation</div>
+      <ul><li>Il est dommage que vous ne puissiez pas venir.</li><li>Il est surprenant qu'il fasse si froid en été.</li></ul>
+    </div>
+    <div class="cat-block">
+      <div class="label">Une possibilité ou un doute</div>
+      <ul><li>Il est possible qu'il pleuve demain.</li><li>Il est improbable que cela arrive.</li></ul>
+    </div>
+    <div class="note-box">⚠ À noter : si l'adjectif exprime une <strong>certitude</strong>, on utilise l'<strong>indicatif</strong>.<br>
+      <em>Il est certain qu'il vient. — Il est évident que tu comprends.</em></div>
+  </section>
+
+  <section>
+    <h2><span class="num">IV.</span> Exercices de compréhension</h2>
+
+    <h3 class="sec">A. Indicatif ou subjonctif ?</h3>
+    <p class="sub" style="margin-bottom:6px;">Choisissez la forme correcte du verbe entre parenthèses.</p>
+    <div id="exA"></div>
+
+    <h3 class="sec">B. Les verbes d'opinion — transformez</h3>
+    <p class="sub" style="margin-bottom:6px;">Récrivez le verbe à la forme demandée (négative ou interrogative).</p>
+    <div id="exB"></div>
+
+    <h3 class="sec">C. Classez ces expressions</h3>
+    <p class="sub" style="margin-bottom:6px;">Choisissez la catégorie qui correspond à chaque expression.</p>
+    <div id="exC"></div>
+
+    <h3 class="sec">D. Il est + adjectif + que…</h3>
+    <p class="sub" style="margin-bottom:6px;">Complétez avec le verbe entre parenthèses, à l'indicatif ou au subjonctif selon le sens de l'adjectif.</p>
+    <div id="exD"></div>
+
+    <div class="blank-wrap" style="display:block; margin: 0 0 18px 0;">
+      <label for="studentName" style="font-size:.9rem; color: var(--ink-soft); display:block; margin-bottom:4px;">Votre nom</label>
+      <input type="text" id="studentName" placeholder="Prénom Nom" autocomplete="off"
+        style="font-family:'Libre Franklin',sans-serif; font-size:1rem; padding:7px 10px; border:1.5px solid var(--paper-line); border-radius:4px; background:transparent; color:var(--ink); width:240px;">
+    </div>
+
+    <div class="controls">
+      <button id="checkBtn">Vérifier mes réponses</button>
+      <button class="ghost" id="resetBtn">Recommencer</button>
+      <button class="ghost" id="pdfBtn" disabled>Télécharger mes résultats (PDF)</button>
+      <span class="score-line" id="scoreLine"></span>
+    </div>
+  </section>
+
+  <footer>Fiche de cours et exercices — à revoir avant le prochain cours.</footer>
+</div>
+
+<script>
+/* ---------- Exercise A : choice (indicatif vs subjonctif) ---------- */
+const exA = [
+  { s:"Je doute que le directeur vous", v:"voir", e:"aujourd'hui.", opts:["voit","voie"], correct:"voie" },
+  { s:"Il est certain que le directeur", v:"venir", e:"demain.", opts:["vient","vienne"], correct:"vient" },
+  { s:"Je pense qu'il", v:"être", e:"fatigué.", opts:["est","soit"], correct:"est" },
+  { s:"Je ne pense pas qu'il", v:"être", e:"fatigué.", opts:["est","soit"], correct:"soit" },
+  { s:"Crois-tu qu'elle", v:"avoir", e:"raison ?", opts:["a","ait"], correct:"ait" },
+  { s:"J'espère que la mer", v:"être", e:"calme.", opts:["est","soit"], correct:"est" },
+  { s:"Il est essentiel que tu", v:"être", e:"à l'heure.", opts:["es","sois"], correct:"sois" },
+  { s:"Il est évident que tu", v:"comprendre", e:"la leçon.", opts:["comprends","comprennes"], correct:"comprends" },
+  { s:"Il est dommage que vous ne", v:"pouvoir", e:"pas venir.", opts:["pouvez","puissiez"], correct:"puissiez" },
+  { s:"Bien qu'il", v:"pleuvoir", e:", nous sortons.", opts:["pleut","pleuve"], correct:"pleuve" },
+];
+
+/* ---------- Exercise B : fill-in, opinion verb transformation ---------- */
+const exB = [
+  { s:"Il pense qu'elle vient. → Il ne pense pas qu'elle", v:"venir", e:".", a:["vienne"] },
+  { s:"Tu crois qu'il est là. → Crois-tu qu'il", v:"être", e:"là ?", a:["soit"] },
+  { s:"Elle est sûre qu'il réussira. → Elle n'est pas sûre qu'il", v:"réussir", e:".", a:["réussisse"] },
+  { s:"Vous trouvez que ce film est bon. → Vous ne trouvez pas que ce film", v:"être", e:"bon.", a:["soit"] },
+];
+
+/* ---------- Exercise C : classify ---------- */
+const categories = ["Volonté","Sentiment","Doute / incertitude","But (circonstancielle)","Jugement / nécessité","Certitude (indicatif)"];
+const exC = [
+  { expr:"vouloir que", correct:"Volonté" },
+  { expr:"être content que", correct:"Sentiment" },
+  { expr:"douter que", correct:"Doute / incertitude" },
+  { expr:"pour que", correct:"But (circonstancielle)" },
+  { expr:"il est essentiel que", correct:"Jugement / nécessité" },
+  { expr:"il est certain que", correct:"Certitude (indicatif)" },
+  { expr:"souhaiter que", correct:"Volonté" },
+  { expr:"être triste que", correct:"Sentiment" },
+  { expr:"il est possible que", correct:"Doute / incertitude" },
+  { expr:"avant que", correct:"But (circonstancielle)" },
+  { expr:"il est dommage que", correct:"Jugement / nécessité" },
+  { expr:"il est évident que", correct:"Certitude (indicatif)" },
+];
+
+/* ---------- Exercise D : fill-in, il est + adjectif ---------- */
+const exD = [
+  { s:"Il est nécessaire qu'elle", v:"partir", e:"maintenant.", a:["parte"] },
+  { s:"Il est possible qu'il", v:"pleuvoir", e:"demain.", a:["pleuve"] },
+  { s:"Il est surprenant qu'il", v:"faire", e:"si froid en été.", a:["fasse"] },
+  { s:"Il est certain qu'il", v:"venir", e:".", a:["vient"] },
+  { s:"Il est improbable que cela", v:"arriver", e:".", a:["arrive"] },
+  { s:"Il est évident que tu", v:"comprendre", e:"très bien.", a:["comprends"] },
+];
+
+function normalize(str){
+  return str.trim().toLowerCase().replace(/[’ʼ]/g, "'").replace(/\s+/g, ' ');
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ---------- Render A ---------- */
+const containerA = document.getElementById('exA');
+exA.forEach((ex, i) => {
+  const div = document.createElement('div');
+  div.className = 'exercise';
+  const shuffledOpts = shuffle(ex.opts);
+  const opts = shuffledOpts.map((o,j) => `
+    <label class="opt-label" data-idx="${i}" data-val="${o}">
+      <input type="radio" name="qA-${i}" value="${o}"> ${o}
+    </label>`).join('');
+  div.innerHTML = `
+    <span class="n">${i+1}.</span>
+    <span class="sentence">${ex.s} <em>(${ex.v})</em> ${ex.e}</span>
+    <div class="options">${opts}</div>
+  `;
+  containerA.appendChild(div);
+});
+
+/* ---------- Render B & D (shared fill style) ---------- */
+function renderFill(container, list, prefix){
+  list.forEach((ex, i) => {
+    const div = document.createElement('div');
+    div.className = 'exercise';
+    div.innerHTML = `
+      <span class="n">${i+1}.</span>
+      <span class="sentence">${ex.s}
+        <span class="blank-wrap"><input class="blank" type="text" data-idx="${i}" id="${prefix}-${i}" autocomplete="off" spellcheck="false"></span>
+        ${ex.e}
+      </span>
+      <span class="correction" id="${prefix}corr-${i}"></span>
+      <div class="hint">(${ex.v})</div>
+    `;
+    container.appendChild(div);
+  });
+}
+renderFill(document.getElementById('exB'), exB, 'B');
+renderFill(document.getElementById('exD'), exD, 'D');
+
+/* ---------- Render C ---------- */
+const containerC = document.getElementById('exC');
+exC.forEach((ex, i) => {
+  const div = document.createElement('div');
+  div.className = 'exercise';
+  const shuffledCats = shuffle(categories);
+  const opts = shuffledCats.map(c => `<option value="${c}">${c}</option>`).join('');
+  div.innerHTML = `
+    <span class="n">${i+1}.</span>
+    <span class="sentence"><strong>${ex.expr}</strong></span>
+    <select class="classify" id="C-${i}" data-idx="${i}">
+      <option value="">— choisir —</option>
+      ${opts}
+    </select>
+  `;
+  containerC.appendChild(div);
+});
+
+/* ---------- Check all ---------- */
+function checkAnswers(){
+  let correctCount = 0;
+  let total = 0;
+  const results = [];
+
+  // A
+  exA.forEach((ex, i) => {
+    total++;
+    const selected = document.querySelector(`input[name="qA-${i}"]:checked`);
+    const labels = document.querySelectorAll(`.opt-label[data-idx="${i}"]`);
+    labels.forEach(l => l.classList.remove('correct','wrong'));
+    const given = selected ? selected.value : '(vide)';
+    let ok = false;
+    if(selected){
+      const val = selected.value;
+      const label = document.querySelector(`.opt-label[data-idx="${i}"][data-val="${val}"]`);
+      if(val === ex.correct){
+        label.classList.add('correct');
+        correctCount++; ok = true;
+      } else {
+        label.classList.add('wrong');
+        const correctLabel = document.querySelector(`.opt-label[data-idx="${i}"][data-val="${ex.correct}"]`);
+        if(correctLabel) correctLabel.classList.add('correct');
+      }
+    } else {
+      const correctLabel = document.querySelector(`.opt-label[data-idx="${i}"][data-val="${ex.correct}"]`);
+      if(correctLabel) correctLabel.classList.add('correct');
+    }
+    results.push({ num:`A${i+1}`, phrase:`${ex.s} (${ex.v}) ${ex.e}`, given, correct:ex.correct, ok });
+  });
+
+  // B & D
+  function checkFill(list, prefix, label){
+    list.forEach((ex, i) => {
+      total++;
+      const input = document.getElementById(`${prefix}-${i}`);
+      const corrEl = document.getElementById(`${prefix}corr-${i}`);
+      const val = normalize(input.value);
+      const accepted = ex.a.map(normalize);
+      input.classList.remove('correct','wrong');
+      const ok = accepted.includes(val) && val.length > 0;
+      if(ok){
+        input.classList.add('correct');
+        corrEl.classList.remove('show'); corrEl.textContent = '';
+        correctCount++;
+      } else {
+        input.classList.add('wrong');
+        corrEl.textContent = '→ ' + ex.a[0];
+        corrEl.classList.add('show');
+      }
+      results.push({ num:`${label}${i+1}`, phrase:`${ex.s} (${ex.v}) ${ex.e}`, given: input.value.trim() || '(vide)', correct: ex.a[0], ok });
+    });
+  }
+  checkFill(exB, 'B', 'B');
+  checkFill(exD, 'D', 'D');
+
+  // C
+  exC.forEach((ex, i) => {
+    total++;
+    const sel = document.getElementById(`C-${i}`);
+    sel.classList.remove('correct','wrong');
+    const ok = sel.value === ex.correct;
+    if(ok){ sel.classList.add('correct'); correctCount++; }
+    else { sel.classList.add('wrong'); }
+    results.push({ num:`C${i+1}`, phrase: ex.expr, given: sel.value || '(vide)', correct: ex.correct, ok });
+  });
+
+  const badge = document.getElementById('gradeBadge');
+  const scoreOn20 = Math.round((correctCount/total)*20*10)/10;
+  badge.textContent = scoreOn20 + '/20';
+  badge.classList.add('show');
+  document.getElementById('scoreLine').textContent = `${correctCount} bonnes réponses sur ${total}.`;
+
+  window._lastResults = { correctCount, total, scoreOn20, results };
+  document.getElementById('pdfBtn').disabled = false;
+}
+
+function downloadResultsPDF(){
+  const data = window._lastResults;
+  if(!data) return;
+  const name = (document.getElementById('studentName').value || 'Élève sans nom').trim();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('Le Subjonctif (en bref) — Résultats', 14, y); y += 10;
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text(`Nom : ${name}`, 14, y); y += 7;
+  doc.text(`Score : ${data.scoreOn20}/20  (${data.correctCount}/${data.total} bonnes réponses)`, 14, y); y += 7;
+  doc.text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, 14, y); y += 10;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(12);
+  doc.text('Détail des réponses', 14, y); y += 8;
+
+  doc.setFontSize(10);
+  data.results.forEach(r => {
+    if(y > 275){ doc.addPage(); y = 20; }
+    doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20);
+    const lines = doc.splitTextToSize(`${r.num}. ${r.phrase}`, 180);
+    doc.text(lines, 14, y);
+    y += lines.length * 5;
+    if(r.ok){
+      doc.setTextColor(47,143,111);
+      doc.text(`Correct — réponse : ${r.given}`, 18, y);
+    } else {
+      doc.setTextColor(192,69,74);
+      doc.text(`Incorrect — réponse : ${r.given}  (attendu : ${r.correct})`, 18, y);
+    }
+    doc.setTextColor(20,20,20);
+    y += 8;
+  });
+
+  doc.save(`subjonctif-theorie-resultats-${name.replace(/\s+/g,'_')}.pdf`);
+}
+
+function resetAll(){
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','wrong'));
+  document.querySelectorAll('input.blank').forEach(i => { i.value=''; i.classList.remove('correct','wrong'); });
+  document.querySelectorAll('.correction').forEach(c => { c.classList.remove('show'); c.textContent=''; });
+  document.querySelectorAll('select.classify').forEach(s => { s.value=''; s.classList.remove('correct','wrong'); });
+  document.getElementById('gradeBadge').classList.remove('show');
+  document.getElementById('scoreLine').textContent = '';
+  document.getElementById('pdfBtn').disabled = true;
+  window._lastResults = null;
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+document.getElementById('pdfBtn').addEventListener('click', downloadResultsPDF);
+</script>
+</body>
+</html>
