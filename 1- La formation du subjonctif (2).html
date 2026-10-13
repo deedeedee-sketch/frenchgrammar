@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Subjonctif — Exercices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Libre+Franklin:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#FBF8F1;
+    --paper-line:#C9DCEA;
+    --margin-red:#D65B5B;
+    --ink:#1F3350;
+    --ink-soft:#4B5D78;
+    --correct:#2F8F6F;
+    --wrong:#C0454A;
+    --gold:#C89A3E;
+  }
+  :root:not([data-theme="light"]){ }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#12161d;
+      --paper-line:#1f2a3a;
+      --margin-red:#c96868;
+      --ink:#eef1f6;
+      --ink-soft:#aab6c8;
+      --correct:#5fbf9a;
+      --wrong:#e07a7e;
+      --gold:#d9b25f;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#12161d;
+    --paper-line:#1f2a3a;
+    --margin-red:#c96868;
+    --ink:#eef1f6;
+    --ink-soft:#aab6c8;
+    --correct:#5fbf9a;
+    --wrong:#e07a7e;
+    --gold:#d9b25f;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family:'Libre Franklin', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{
+    max-width:760px;
+    margin:0 auto;
+    padding: 56px 32px 90px 64px;
+    position:relative;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 37px,
+      var(--paper-line) 37px,
+      var(--paper-line) 38px
+    );
+    background-position: 0 190px;
+  }
+  .margin-line{
+    position:absolute;
+    left:38px;
+    top:0;
+    bottom:0;
+    width:1.5px;
+    background: var(--margin-red);
+    opacity:.55;
+  }
+
+  header{ margin-bottom: 34px; }
+  .eyebrow{
+    font-family:'Caveat', cursive;
+    font-size:1.5rem;
+    color: var(--margin-red);
+    transform: rotate(-2deg);
+    display:inline-block;
+    margin:0 0 2px 2px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: 2.6rem;
+    margin: 0 0 6px 0;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    color: var(--ink-soft);
+    font-size:1.05rem;
+    max-width: 56ch;
+  }
+
+  .grade-badge{
+    position:absolute;
+    top:34px;
+    right:22px;
+    width:84px;
+    height:84px;
+    border:2.5px solid var(--margin-red);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform: rotate(6deg);
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:1.6rem;
+    color: var(--margin-red);
+    opacity:0;
+    transition: opacity .35s ease, transform .35s ease;
+    text-align:center;
+    line-height:1.05;
+    background: color-mix(in srgb, var(--paper) 85%, transparent);
+  }
+  .grade-badge.show{ opacity:1; transform: rotate(6deg) scale(1); }
+
+  section{ margin: 44px 0; }
+
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin: 0 0 14px 0;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  h2 .num{
+    color: var(--margin-red);
+    font-family:'Caveat', cursive;
+    font-size:1.7rem;
+  }
+
+  .rule-box{
+    background: color-mix(in srgb, var(--paper-line) 35%, transparent);
+    border-left: 3px solid var(--margin-red);
+    padding: 16px 20px;
+    border-radius: 2px;
+    font-size:.97rem;
+    color: var(--ink-soft);
+  }
+  .rule-box p{ margin: 0 0 10px 0; }
+  .rule-box p:last-child{ margin-bottom:0; }
+  .rule-box strong{ color: var(--ink); }
+
+  details{
+    margin-top:18px;
+    border-top: 1px solid var(--paper-line);
+    padding-top: 14px;
+  }
+  summary{
+    cursor:pointer;
+    font-weight:600;
+    font-size:.95rem;
+    color: var(--ink);
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  summary::before{
+    content:"▸";
+    color: var(--margin-red);
+    transition: transform .2s ease;
+    display:inline-block;
+  }
+  details[open] summary::before{ transform: rotate(90deg); }
+
+  .tables{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 16px;
+  }
+  @media (max-width: 560px){ .tables{ grid-template-columns: 1fr; } }
+
+  .conj-table{
+    font-size:.88rem;
+  }
+  .conj-table h3{
+    font-family:'Fraunces', serif;
+    font-size:1.02rem;
+    font-weight:600;
+    font-style:italic;
+    margin:0 0 6px 0;
+  }
+  .conj-table table{
+    width:100%;
+    border-collapse: collapse;
+  }
+  .conj-table td{
+    padding: 3px 4px;
+    border-bottom: 1px dotted var(--paper-line);
+  }
+  .conj-table td.pron{ color: var(--ink-soft); width: 38%; }
+  .conj-table td.form{ font-weight:600; }
+
+  .trigger-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+  }
+  .trigger-list span{
+    border:1px solid var(--paper-line);
+    padding:4px 11px;
+    border-radius:14px;
+    font-size:.85rem;
+    color: var(--ink-soft);
+  }
+
+  .exercise{
+    margin: 20px 0;
+    padding-bottom: 18px;
+  }
+  .exercise .n{
+    font-weight:700;
+    color: var(--margin-red);
+    margin-right:6px;
+  }
+  .exercise .sentence{ font-size:1.03rem; }
+  .exercise .hint{
+    color: var(--ink-soft);
+    font-style:italic;
+    font-size:.9rem;
+  }
+  .blank-wrap{
+    display:inline-flex;
+    flex-direction:column;
+    vertical-align:bottom;
+    margin: 0 2px;
+  }
+  input.blank{
+    font-family:'Libre Franklin', sans-serif;
+    font-size:1rem;
+    font-weight:600;
+    color: var(--ink);
+    background: transparent;
+    border:none;
+    border-bottom: 2px solid var(--ink-soft);
+    padding: 1px 4px;
+    width: 130px;
+    text-align:center;
+    outline:none;
+  }
+  input.blank:focus{ border-bottom-color: var(--ink); }
+  input.blank.correct{ border-bottom-color: var(--correct); color: var(--correct); }
+  input.blank.wrong{ border-bottom-color: var(--wrong); color: var(--wrong); }
+  .correction{
+    font-family:'Caveat', cursive;
+    color: var(--wrong);
+    font-size:1.15rem;
+    margin-left: 6px;
+    opacity:0;
+    transition: opacity .25s ease;
+  }
+  .correction.show{ opacity:1; }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top: 30px;
+    flex-wrap:wrap;
+  }
+  button{
+    font-family:'Libre Franklin', sans-serif;
+    font-weight:600;
+    font-size:.92rem;
+    padding: 11px 22px;
+    border-radius: 4px;
+    cursor:pointer;
+    border: 1.5px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    transition: transform .12s ease, opacity .12s ease;
+  }
+  button:hover{ opacity:.88; }
+  button:active{ transform: scale(.97); }
+  button.ghost{
+    background: transparent;
+    color: var(--ink);
+  }
+  .score-line{
+    font-size:.92rem;
+    color: var(--ink-soft);
+  }
+
+  footer{
+    margin-top: 50px;
+    padding-top: 18px;
+    border-top: 1px solid var(--paper-line);
+    color: var(--ink-soft);
+    font-size:.85rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+
+  @media (max-width: 560px){
+    .page{ padding: 40px 20px 70px 48px; }
+    h1{ font-size:2.1rem; }
+    .grade-badge{ width:64px; height:64px; font-size:1.2rem; top:22px; right:14px;}
+    input.blank{ width: 108px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="margin-line"></div>
+  <div class="grade-badge" id="gradeBadge">—</div>
+
+  <header>
+    <span class="eyebrow">fiche d'exercices</span>
+    <h1>Le Subjonctif</h1>
+    <p class="sub">Révision des verbes être, avoir, aller, faire — pouvoir, devoir, falloir, vouloir, savoir — payer, créer, envoyer, parler.</p>
+  </header>
+
+  <section>
+    <h2><span class="num">I.</span> Rappel</h2>
+    <div class="rule-box">
+      <p>Le subjonctif présent se forme, pour la plupart des verbes, sur le radical de la 3<sup>e</sup> personne du pluriel du présent de l'indicatif (<strong>ils/elles</strong>), auquel on ajoute les terminaisons <strong>-e, -es, -e, -ions, -iez, -ent</strong>.</p>
+      <p>Exemple : <em>ils parlent</em> → que je parl<strong>e</strong>, que nous parl<strong>ions</strong>.</p>
+      <p>Quelques expressions qui déclenchent le subjonctif : <strong>il faut que, je veux que, bien que, pour que, il est possible que…</strong></p>
+      <p>Dix verbes ont un radical irrégulier au subjonctif : <strong>être, avoir, aller, faire, pouvoir, savoir, vouloir, valoir, falloir, pleuvoir</strong>. Mais attention : <strong>être</strong> et <strong>avoir</strong> sont les deux seuls verbes qui ont aussi des <strong>terminaisons irrégulières</strong> (sois, soit… / aie, ait…). Tous les autres verbes — même ceux qui ont un radical irrégulier comme aller, faire, pouvoir ou falloir — gardent les terminaisons régulières <strong>-e, -es, -e, -ions, -iez, -ent</strong>.</p>
+      <p>Certains verbes en <strong>-yer</strong> (payer, envoyer, créer) changent aussi de forme devant un <strong>-i</strong>.</p>
+    </div>
+
+    <details>
+      <summary>Voir les tableaux de conjugaison</summary>
+      <div class="tables">
+
+        <div class="conj-table"><h3>être</h3><table>
+          <tr><td class="pron">que je</td><td class="form">sois</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">sois</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">soit</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">soyons</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">soyez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">soient</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>avoir</h3><table>
+          <tr><td class="pron">que j'</td><td class="form">aie</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">aies</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">ait</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">ayons</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">ayez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">aient</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>aller</h3><table>
+          <tr><td class="pron">que j'</td><td class="form">aille</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">ailles</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">aille</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">allions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">alliez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">aillent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>faire</h3><table>
+          <tr><td class="pron">que je</td><td class="form">fasse</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">fasses</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">fasse</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">fassions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">fassiez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">fassent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>pouvoir</h3><table>
+          <tr><td class="pron">que je</td><td class="form">puisse</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">puisses</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">puisse</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">puissions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">puissiez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">puissent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>devoir</h3><table>
+          <tr><td class="pron">que je</td><td class="form">doive</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">doives</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">doive</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">devions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">deviez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">doivent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>vouloir</h3><table>
+          <tr><td class="pron">que je</td><td class="form">veuille</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">veuilles</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">veuille</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">voulions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">vouliez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">veuillent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>savoir</h3><table>
+          <tr><td class="pron">que je</td><td class="form">sache</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">saches</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">sache</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">sachions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">sachiez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">sachent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>falloir <span style="font-style:normal;color:var(--ink-soft);font-size:.8em;">(impersonnel)</span></h3><table>
+          <tr><td class="pron">qu'il</td><td class="form">faille</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>pleuvoir <span style="font-style:normal;color:var(--ink-soft);font-size:.8em;">(impersonnel)</span></h3><table>
+          <tr><td class="pron">qu'il</td><td class="form">pleuve</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>payer</h3><table>
+          <tr><td class="pron">que je</td><td class="form">paie / paye</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">paies / payes</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">paie / paye</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">payions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">payiez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">paient / payent</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>envoyer</h3><table>
+          <tr><td class="pron">que j'</td><td class="form">envoie</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">envoies</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">envoie</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">envoyions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">envoyiez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">envoient</td></tr>
+        </table></div>
+
+        <div class="conj-table"><h3>créer / parler <span style="font-style:normal;color:var(--ink-soft);font-size:.8em;">(réguliers)</span></h3><table>
+          <tr><td class="pron">que je</td><td class="form">crée / parle</td></tr>
+          <tr><td class="pron">que tu</td><td class="form">crées / parles</td></tr>
+          <tr><td class="pron">qu'il/elle</td><td class="form">crée / parle</td></tr>
+          <tr><td class="pron">que nous</td><td class="form">créions / parlions</td></tr>
+          <tr><td class="pron">que vous</td><td class="form">créiez / parliez</td></tr>
+          <tr><td class="pron">qu'ils/elles</td><td class="form">créent / parlent</td></tr>
+        </table></div>
+
+      </div>
+    </details>
+
+    <details>
+      <summary>Voir des expressions qui déclenchent le subjonctif</summary>
+      <div class="trigger-list">
+        <span>il faut que</span><span>il est important que</span><span>je veux que</span>
+        <span>je voudrais que</span><span>bien que</span><span>quoique</span>
+        <span>pour que</span><span>afin que</span><span>avant que</span>
+        <span>il est possible que</span><span>il se peut que</span><span>je souhaite que</span>
+        <span>il est nécessaire que</span><span>je ne pense pas que</span><span>il vaut mieux que</span>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <h2><span class="num">II.</span> À vous de conjuguer</h2>
+    <p class="sub" style="margin-bottom:6px;">Complétez chaque phrase avec le verbe indiqué, au subjonctif présent.</p>
+
+    <div class="blank-wrap" style="display:block; margin: 0 0 18px 0;">
+      <label for="studentName" style="font-size:.9rem; color: var(--ink-soft); display:block; margin-bottom:4px;">Votre nom</label>
+      <input type="text" id="studentName" placeholder="Prénom Nom" autocomplete="off"
+        style="font-family:'Libre Franklin',sans-serif; font-size:1rem; padding:7px 10px; border:1.5px solid var(--paper-line); border-radius:4px; background:transparent; color:var(--ink); width:240px;">
+    </div>
+
+    <div id="exercises"></div>
+
+    <div class="controls">
+      <button id="checkBtn">Vérifier mes réponses</button>
+      <button class="ghost" id="resetBtn">Recommencer</button>
+      <button class="ghost" id="pdfBtn" disabled>Télécharger mes résultats (PDF)</button>
+      <span class="score-line" id="scoreLine"></span>
+    </div>
+  </section>
+
+  <footer>Fiche d'exercices — subjonctif présent.</footer>
+</div>
+
+<script>
+const exercises = [
+  { s:"Il faut que tu", v:"être", e:"à l'heure demain matin.", a:["sois"] },
+  { s:"Bien qu'elle", v:"être", e:"fatiguée, elle continue à travailler.", a:["soit"] },
+  { s:"Je voudrais que vous", v:"avoir", e:"un peu plus de patience.", a:["ayez"] },
+  { s:"Il est possible que nous", v:"avoir", e:"un contrôle la semaine prochaine.", a:["ayons"] },
+  { s:"Il faut que j'", v:"aller", e:"chez le médecin cet après-midi.", a:["aille"] },
+  { s:"Pour que vous", v:"aller", e:"plus vite, prenez l'autoroute.", a:["alliez"] },
+  { s:"Il est important que tu", v:"faire", e:"tes devoirs avant le dîner.", a:["fasses"] },
+  { s:"Je souhaite que nous", v:"faire", e:"un voyage ensemble cet été.", a:["fassions"] },
+  { s:"Il se peut qu'elle ne", v:"pouvoir", e:"pas venir à la fête.", a:["puisse"] },
+  { s:"Avant que nous ne", v:"pouvoir", e:"partir, il faut ranger la salle.", a:["puissions"] },
+  { s:"Je ne crois pas qu'il", v:"devoir", e:"attendre plus longtemps.", a:["doive"] },
+  { s:"Bien qu'ils", v:"devoir", e:"partir tôt, ils sont restés jusqu'au bout.", a:["doivent"] },
+  { s:"Je ne pense pas qu'il", v:"falloir", e:"recommencer tout le projet.", a:["faille"] },
+  { s:"Quoiqu'il", v:"vouloir", e:"nous aider, il n'a pas le temps.", a:["veuille"] },
+  { s:"Il est surprenant que vous", v:"vouloir", e:"déménager si loin.", a:["vouliez"] },
+  { s:"Il faut que je", v:"savoir", e:"la réponse avant la réunion.", a:["sache"] },
+  { s:"Je doute que tu", v:"savoir", e:"conduire aussi bien que lui.", a:["saches"] },
+  { s:"Il faut que nous", v:"payer", e:"le loyer avant le premier du mois.", a:["payions"] },
+  { s:"Je ne veux pas que vous", v:"payer", e:"l'addition, c'est moi qui invite.", a:["payiez"] },
+  { s:"Il est essentiel que l'équipe", v:"créer", e:"un nouveau logo cette année.", a:["crée"] },
+  { s:"Pour que vous", v:"créer", e:"votre propre entreprise, il faut un bon plan.", a:["créiez"] },
+  { s:"Il faut que tu m'", v:"envoyer", e:"le document avant midi.", a:["envoies"] },
+  { s:"Je souhaite que nous", v:"envoyer", e:"les invitations dès aujourd'hui.", a:["envoyions"] },
+  { s:"Il est important que vous", v:"parler", e:"plus lentement avec elle.", a:["parliez"] },
+  { s:"Bien qu'ils", v:"parler", e:"trois langues, ils ont du mal à comprendre ce texte.", a:["parlent"] },
+];
+
+const container = document.getElementById('exercises');
+
+exercises.forEach((ex, i) => {
+  const div = document.createElement('div');
+  div.className = 'exercise';
+  div.innerHTML = `
+    <span class="n">${i+1}.</span>
+    <span class="sentence">${ex.s}
+      <span class="blank-wrap">
+        <input class="blank" type="text" data-idx="${i}" autocomplete="off" spellcheck="false">
+      </span>
+      ${ex.e}
+    </span>
+    <span class="correction" id="corr-${i}"></span>
+    <div class="hint">(${ex.v})</div>
+  `;
+  container.appendChild(div);
+});
+
+function normalize(str){
+  return str.trim().toLowerCase()
+    .replace(/[’ʼ]/g, "'")
+    .replace(/\s+/g, ' ');
+}
+
+function checkAnswers(){
+  let correctCount = 0;
+  const results = [];
+  exercises.forEach((ex, i) => {
+    const input = document.querySelector(`input[data-idx="${i}"]`);
+    const corrEl = document.getElementById(`corr-${i}`);
+    const val = normalize(input.value);
+    const accepted = ex.a.map(normalize);
+    const isCorrect = accepted.includes(val) && val.length > 0;
+    input.classList.remove('correct','wrong');
+    if(isCorrect){
+      input.classList.add('correct');
+      corrEl.classList.remove('show');
+      corrEl.textContent = '';
+      correctCount++;
+    } else {
+      input.classList.add('wrong');
+      corrEl.textContent = '→ ' + ex.a[0];
+      corrEl.classList.add('show');
+    }
+    results.push({
+      num: i+1,
+      phrase: `${ex.s} (${ex.v}) ${ex.e}`,
+      given: input.value.trim() || '(vide)',
+      correct: ex.a[0],
+      ok: isCorrect
+    });
+  });
+  const badge = document.getElementById('gradeBadge');
+  const total = exercises.length;
+  const scoreOn20 = Math.round((correctCount/total)*20*10)/10;
+  badge.textContent = scoreOn20 + '/20';
+  badge.classList.add('show');
+  document.getElementById('scoreLine').textContent =
+    `${correctCount} bonnes réponses sur ${total}.`;
+
+  window._lastResults = { correctCount, total, scoreOn20, results };
+  document.getElementById('pdfBtn').disabled = false;
+}
+
+function downloadResultsPDF(){
+  const data = window._lastResults;
+  if(!data) return;
+  const name = (document.getElementById('studentName').value || 'Élève sans nom').trim();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('Le Subjonctif — Résultats', 14, y); y += 10;
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text(`Nom : ${name}`, 14, y); y += 7;
+  doc.text(`Score : ${data.scoreOn20}/20  (${data.correctCount}/${data.total} bonnes réponses)`, 14, y); y += 7;
+  doc.text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, 14, y); y += 10;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(12);
+  doc.text('Détail des réponses', 14, y); y += 8;
+
+  doc.setFontSize(10);
+  data.results.forEach(r => {
+    if(y > 275){ doc.addPage(); y = 20; }
+    doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20);
+    const lines = doc.splitTextToSize(`${r.num}. ${r.phrase}`, 180);
+    doc.text(lines, 14, y);
+    y += lines.length * 5;
+    if(r.ok){
+      doc.setTextColor(47,143,111);
+      doc.text(`Correct — réponse : ${r.given}`, 18, y);
+    } else {
+      doc.setTextColor(192,69,74);
+      doc.text(`Incorrect — réponse : ${r.given}  (attendu : ${r.correct})`, 18, y);
+    }
+    doc.setTextColor(20,20,20);
+    y += 8;
+  });
+
+  doc.save(`subjonctif-resultats-${name.replace(/\s+/g,'_')}.pdf`);
+}
+
+function resetAll(){
+  exercises.forEach((ex, i) => {
+    const input = document.querySelector(`input[data-idx="${i}"]`);
+    const corrEl = document.getElementById(`corr-${i}`);
+    input.value = '';
+    input.classList.remove('correct','wrong');
+    corrEl.classList.remove('show');
+    corrEl.textContent = '';
+  });
+  document.getElementById('gradeBadge').classList.remove('show');
+  document.getElementById('scoreLine').textContent = '';
+  document.getElementById('pdfBtn').disabled = true;
+  window._lastResults = null;
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+document.getElementById('pdfBtn').addEventListener('click', downloadResultsPDF);
+
+document.querySelectorAll('input.blank').forEach(input => {
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      const idx = parseInt(input.dataset.idx, 10);
+      const next = document.querySelector(`input[data-idx="${idx+1}"]`);
+      if(next) next.focus(); else checkAnswers();
+    }
+  });
+});
+</script>
+</body>
+</html>
